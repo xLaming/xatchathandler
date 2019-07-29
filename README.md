@@ -15,7 +15,7 @@
 * R. Yes, as you can see everything here is under SSL directly to the xat.com it needs your chat name and your password but it doesn't connect to any external link.
 
 ### Q. What it does?
-* R. You can do a lot of things, e.g you can change your chat backgrounds, description, button names, text etc. I started it creating just for showing staff list, it works 100% fine you just need to have the power MANAGE on your chat enabled. It have a lot of features you can try it yourself.
+* R. You can do a lot of things, e.g you can change your chat backgrounds, description, button names, text etc. I started it creating just for showing staff list, it works 100% fine you just need to have the power **MANAGE** on your chat enabled. It have a lot of features you can try it yourself.
 
 ### Q. Is it illegal?
 * R. In my point of view no, there is a lot of people on official chats using something worse that is xat bot clients, this is just a tool that allows you to control **YOUR** chat.
