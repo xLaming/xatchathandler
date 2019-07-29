@@ -10,6 +10,7 @@ class ChatHandler:
     def __init__(self, name, passwd):
         ''' SETTINGS '''
         self.NOT_STAFF  = ['guest'] # You can use: member, mod, owner, main
+        self.BLACK_LIST  = [10101, 1510151, 23232323, 356566558] # Black list, you can ignore bots or someone else
         self.CACHE_TIME = 86400 # 24 hours in seconds
         self.PHRASES    = [
             'Invalid password.',
@@ -50,13 +51,15 @@ class ChatHandler:
             return self.PHRASES[1]
         for line in getParams.splitlines():
             user = line.split(',')
-            if user[5] not in self.NOT_STAFF:
+            if user[5] not in self.NOT_STAFF and not int(user[0]) in self.BLACK_LIST:
+                xatUser = self.getUsername(user[0])
                 isTemp = True if user[5][:4] == 'temp' else False
-                staffList[user[0]] = {
-                    'user': self.getUsername(user[0]),
-                    'rank': user[5].replace('temp', ''),
-                    'temp': isTemp,
-                }
+                if xatUser:
+                    staffList[user[0]] = {
+                        'user': xatUser,
+                        'rank': user[5].replace('temp', ''),
+                        'temp': isTemp,
+                    }
         return staffList
 
     def setOuter(self, bg):
