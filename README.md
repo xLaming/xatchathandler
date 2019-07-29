@@ -25,7 +25,7 @@
 ### Q. What is it?
 * R. Well, it's my script written in Python(which I have used 3.7 on development) using it you can manage 80% of you chat just using your console, or maybe your website (Django, Flask etc).
 
-### R. It requires something else?
+### Q. It requires something else?
 * R. If you are using Linux you need add the permissions correctly to the file userscache.json, it is used to cache usernames and prevent the script agains't being slow.
 
 ### Q. Is it safe?
