@@ -26,7 +26,7 @@
 * R. Well, it's my script written in Python(which I have used 3.7 on development) using it you can manage 80% of you chat just using your console, or maybe your website (Django, Flask etc).
 
 ### Q. It requires something else?
-* R. If you are using Linux you need add the permissions correctly to the file **userscache.json**, it is used to cache usernames and prevent the script agains't being slow.
+* R. If you are using Linux you need add the permissions correctly to the file **userscache.json**, it is used to cache usernames and prevent the script against being slow.
 
 ### Q. Is it safe?
 * R. Yes, as you can see everything here is under SSL directly to the xat.com it needs your chat name and your password but it doesn't connect to any external link.
