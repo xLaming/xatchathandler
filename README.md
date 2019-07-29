@@ -38,5 +38,5 @@
 * R. No, there is a lot of people on official chats using something worse that is xat bot clients, this is just a tool that allows you to control **YOUR** chat.
 
 ## About:
-* Version: **1.0**
+* Version: **1.1**
 * Credits: **Paulo (aka xLaming)**
