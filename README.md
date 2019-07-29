@@ -7,6 +7,20 @@
 4. Uncomment what you want to use and change the value;
 5. Run it.
 
+## Available functions:
+* chat.getStaffList()
+* chat.setOuter('YOUR_OUTER_URL')
+* chat.setInner('YOUR_INNER_URL')
+* chat.setTransparent(False)
+  * Available: **False** or **True**
+* chat.setComments(True)
+  * Available: **False** or **True**
+* chat.setDescription('Your chat description')
+* chat.setTags('your,chat,tags')
+* chat.setAdsLink('xat.com/YourChat')
+* chat.setButtonText(0, 'Your first tab text')
+* chat.setButtonName(0, 'Your first tab name')
+
 ## FAQ:
 ### Q. What is it?
 * R. Well, it's my script written in Python(which I have used 3.7 on development) using it you can manage 80% of you chat just using your console, or maybe your website (Django, Flask etc).
