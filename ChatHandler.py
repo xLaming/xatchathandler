@@ -5,17 +5,19 @@ import time
 import json
 import random
 import requests
+from django.conf import settings
 
-class ChatHandler:
-    def __init__(self, name, passwd):
+class Chat:
+    def __init__(self):
         ''' SETTINGS '''
-        self.NOT_STAFF  = ['guest'] # You can use: member, mod, owner, main
+        self.NOT_STAFF   = ['guest'] # You can use: member, mod, owner, main
         self.BLACK_LIST  = [10101, 1510151, 23232323, 356566558] # Black list, you can ignore bots or someone else
-        self.CACHE_TIME = 86400 # 24 hours in seconds
-        self.PHRASES    = [
+        self.CACHE_TIME  = 86400 # 24 hours in seconds
+        self.PHRASES     = [
             'Invalid password.',
             'You need MANAGE power enabled.',
             'Page not found, you can use 0-5.',
+            'Language not found',
         ]
         self.XAT_IDS = {
             7:   'Darren',
@@ -30,15 +32,20 @@ class ChatHandler:
         self.URL = {
             'xs': 'https://xat.me/web_gear/chat/profile.php?id=%d',
             'edit': 'https://xat.com/web_gear/chat.php?id=%d&pw=%d',
-            'chat': 'https://xat.com/web_gear/chat/editgroup.php?GroupName=%s' % name,
+            'chat': 'https://xat.com/web_gear/chat/editgroup.php?GroupName=%s' % settings.CHAT_NAME,
             'eip': 'https://xat.com/web_gear/chat/eip.php?id=%d&pw=%d&md=4&back=%s&t=%s',
         }
         ''' #=#=#=#=# '''
-        self.NAME   = name
-        self.PASS   = passwd
-        self.AUTH   = False
-        self.HTML   = self.getInitData()
-        self.INPUTS = {}
+        self.AUTH      = False
+        self.LANGUAGES = []
+        self.NAME      = settings.CHAT_NAME
+        self.PASS      = settings.CHAT_PASS
+        self.HEADERS   = {
+            'Referer': self.URL['chat'],
+            'User-Agent': 'Mozilla/5.0 (X11; Linux i586; rv:31.0) Gecko/20100101 Firefox/31.0',
+        }
+        self.HTML      = self.getInitData()
+        self.INPUTS    = {}
 
     def getStaffList(self):
         self.loadInputs()
@@ -75,7 +82,7 @@ class ChatHandler:
         if not self.INPUTS:
             return self.PHRASES[0]
         reqData = requests.get(self.URL['edit'] % (int(self.INPUTS['id']), int(self.INPUTS['pw']))).text
-        getData = re.search(r'<input name="background" type="hidden" value="(.*?);=(.*?)">', reqData)
+        getData = re.search(r'<input name="background" type="hidden" value="(.*?);=(.*?)">', reqData, re.DOTALL)
         newData = '%s;=%s' % (bg, getData[2])
         requests.post(self.URL['eip'] % (int(self.INPUTS['id']), int(self.INPUTS['pw']), newData, random.random()))
         return True
@@ -138,6 +145,13 @@ class ChatHandler:
         self.saveChanges()
         return True
 
+    def setLanguage(lang):
+        if lang not in self.LANGUAGES:
+            return self.PHRASES[3]
+        self.INPUTS['Lang'] = lang
+        self.saveChanges()
+        return True
+
     def setButtonName(self, number, title):
         self.loadInputs()
         if not self.INPUTS:
@@ -155,8 +169,7 @@ class ChatHandler:
         return self.submit()
 
     def submit(self):
-        headers = {'Referer': self.URL['chat']}
-        getSetup = requests.post(self.URL['chat'], data=self.INPUTS, headers=headers).text
+        getSetup = requests.post(self.URL['chat'], data=self.INPUTS, headers=self.HEADERS).text
         return getSetup
         
     def getInitData(self):
@@ -171,7 +184,8 @@ class ChatHandler:
         if uid in self.XAT_IDS:
             return self.XAT_IDS[uid]
         uid = str(uid)
-        rUsers = open('usercache.json', "r")
+        fileDir = settings.INTERNAL_DIR + '/usercache.json'
+        rUsers = open(fileDir, "r")
         users = json.loads(rUsers.read())
         rUsers.close()
         if uid in users:
@@ -183,7 +197,7 @@ class ChatHandler:
                 'name': getProfile,
                 'time': int(time.time() + self.CACHE_TIME)
             }
-        wUsers = open('usercache.json', "w")
+        wUsers = open(fileDir, "w")
         wUsers.write(json.dumps(users))
         wUsers.close()
         if uid in users:
@@ -193,9 +207,14 @@ class ChatHandler:
     def loadInputs(self):
         if not self.AUTH:
             return False
-        self.HTML = self.HTML.replace('\r\n', '') # fixed
-        getInputs = re.findall(r'<input(.*?)>', self.HTML)
-        getTextarea = re.search(r'<textarea id="media0"(.*?)>(.*?)</textarea>', self.HTML)
+        getInputs = re.findall(r'<input(.*?)>', self.HTML, flags=re.DOTALL)
+        getTextarea = re.search(r'<textarea id="media0"(.*?)>(.*?)</textarea>', self.HTML, re.DOTALL)
+        getLang = re.search(r'<select name="Lang">(.*?)</select>', self.HTML, re.DOTALL)
+        getLangList = re.findall(r'<option value="([\w]+)"(.*?)>(.*?)</option>', getLang[0], flags=re.DOTALL)
+        for code, extra, name in getLangList:
+            self.LANGUAGES.append(code)
+            if ' selected' in extra:
+                self.INPUTS['Lang'] = code
         self.INPUTS['media0'] = getTextarea[2]
         for i in getInputs:
             getInput = re.findall(r'name\="(.*?)"', i)
@@ -211,7 +230,7 @@ class ChatHandler:
                 if getValue:
                     self.INPUTS[getInputLazy[0]] = getValue[0]
         return self.INPUTS
-        
+
 
 ''' YOUR CHAT DETAILS'''
 CHAT_NAME = 'YOUR_CHATNAME'
@@ -228,5 +247,6 @@ chat = ChatHandler(CHAT_NAME, CHAT_PASS)
 #chat.setDescription('My personal chat...')
 #chat.setTags('mundo,smilies,chat')
 #chat.setAdsLink('mundosmilies.com')
+#chat.setLanguage('en')
 #chat.setButtonText(0, 'This is my first page')
 #chat.setButtonName(0, 'Home')
