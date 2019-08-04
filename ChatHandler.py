@@ -5,7 +5,6 @@ import time
 import json
 import random
 import requests
-from django.conf import settings
 
 class Chat:
     def __init__(self):
