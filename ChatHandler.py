@@ -10,7 +10,7 @@ class Chat:
     def __init__(self):
         ''' SETTINGS '''
         self.NOT_STAFF   = ['guest'] # You can use: member, mod, owner, main
-        self.BLACK_LIST  = [10101, 1510151, 23232323, 356566558] # Black list, you can ignore bots or someone else
+        self.BLACK_LIST  = [10101, 1510151, 22332233, 23232323, 356566558] # Black list, you can ignore bots or someone else
         self.CACHE_TIME  = 86400 # 24 hours in seconds
         self.PHRASES     = [
             'Invalid password.',
